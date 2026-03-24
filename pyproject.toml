@@ -1,5 +1,14 @@
+[project]
+name = "onutech-api"
+version = "0.1.0"
+dependencies = [] # On laisse vide car on utilise le requirements.txt pour Vercel
+requires-python = ">=3.9"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [tool.taskipy.tasks]
 seed = "PYTHONPATH=. python src/database/seed.py"
 dev = "uvicorn src.main:app --reload"
-
 injection = "python -m src.rag.ingestion.processor"
