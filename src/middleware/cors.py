@@ -4,6 +4,7 @@ def setup_cors(app):
     origins = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        "https://onutechagent.vercel.app"
     ]
 
     app.add_middleware(
