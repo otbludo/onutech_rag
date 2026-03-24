@@ -1,0 +1,5 @@
+[tool.taskipy.tasks]
+seed = "PYTHONPATH=. python src/database/seed.py"
+dev = "uvicorn src.main:app --reload"
+
+injection = "python -m src.rag.ingestion.processor"
