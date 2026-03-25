@@ -23,7 +23,7 @@ export function WavyMarquee({
   useEffect(() => {
     let offset = 0;
     const animate = () => {
-      offset -= speed;
+      offset += speed;
       if (offset <= -100) offset = 0;
       if (textPathRef.current) {
         textPathRef.current.setAttribute("startOffset", `${offset}%`);

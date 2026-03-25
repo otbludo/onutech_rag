@@ -3,7 +3,7 @@ import { WavyMarquee } from "../ui/WavyMarquee";
 
 export function Banner() {
   const threadsPath =
-    "M 800,0 C 700,200 600,600 300,500 C 0,400 100,800 500,750 C 900,700 800,1000 800,1200";
+    "M 800,1200 C 800,1000 900,700 500,750 C 100,800 0,400 300,500 C 600,600 700,200 800,0";
   const loopPath =
     "M 900,100 C 700,100 600,400 800,500 C 1000,600 900,900 700,1000";
 
@@ -28,7 +28,7 @@ export function Banner() {
         text={automationServices}
         pathDefinition={threadsPath}
         speed={0.01}
-        className="opacity-90"
+        className="opacity-90 "
       />
       <WavyMarquee
         id="sideLoop"
