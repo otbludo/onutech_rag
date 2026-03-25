@@ -19,6 +19,7 @@ Backend FastAPI pour un moteur RAG (retrieval‑augmented generation) + gestion 
   - [Migrations (Alembic)](#migrations-alembic)
   - [Initialiser les données (seed)](#initialiser-les-données-seed)
   - [Ingestion RAG](#ingestion-rag)
+  - [Tests](#tests)
 
 ## Aperçu
 
@@ -159,3 +160,37 @@ Le script :
 1. Charge les PDFs,
 2. Découpe en chunks,
 3. Stocke dans ChromaDB (`./chroma_db`).
+
+## Tests
+
+Installer les dépendances (incluant `pytest`, `pytest-asyncio`, `pytest-cov`) :
+
+```bash
+pip install -r requirements.txt
+```
+
+Lancer tous les tests :
+
+```bash
+pytest tests/
+```
+
+Lancer la couverture de code :
+
+```bash
+pytest --cov=src
+```
+
+Exemple de couverture actuelle (résumé) :
+
+```
+TOTAL                                  336     30    91%
+```
+
+Générer un rapport HTML :
+
+```bash
+pytest --cov=src --cov-report=html
+```
+
+Puis ouvrir : `htmlcov/index.html` ou `xdg-open htmlcov/index.html`
