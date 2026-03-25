@@ -12,7 +12,7 @@ def get_retriever():
     )
     
     vectordb = Chroma(
-        persist_directory="./chroma_db", 
+        persist_directory="./src/rag/chroma_db", 
         embedding_function=embeddings
     )
     """ nombre de morceau envoyer au model"""

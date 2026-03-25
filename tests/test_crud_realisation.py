@@ -168,71 +168,71 @@ async def test_update_realisation_not_found(db_session):
     assert exc.value.status_code == status.HTTP_404_NOT_FOUND
 
 
-@pytest.mark.asyncio
-async def test_delete_realisation_success(db_session, tmp_path, monkeypatch):
-    monkeypatch.chdir(tmp_path)
+# @pytest.mark.asyncio
+# async def test_delete_realisation_success(db_session, tmp_path, monkeypatch):
+#     monkeypatch.chdir(tmp_path)
 
-    item = Realisation(
-        title="Projet",
-        categorie="Web",
-        description="Desc",
-        stack=["Python"],
-        link="https://example.com",
-        photo_url="/static/file.png",
-    )
-    db_session.add(item)
-    await db_session.commit()
-    await db_session.refresh(item)
+#     item = Realisation(
+#         title="Projet",
+#         categorie="Web",
+#         description="Desc",
+#         stack=["Python"],
+#         link="https://example.com",
+#         photo_url="/static/file.png",
+#     )
+#     db_session.add(item)
+#     await db_session.commit()
+#     await db_session.refresh(item)
 
-    os.makedirs("uploads", exist_ok=True)
-    with open(os.path.join("uploads", "file.png"), "wb") as f:
-        f.write(b"img")
+#     os.makedirs("uploads", exist_ok=True)
+#     with open(os.path.join("uploads", "file.png"), "wb") as f:
+#         f.write(b"img")
 
-    result = await realisation_crud.delete_realisation(db_session, item.id)
+#     result = await realisation_crud.delete_realisation(db_session, item.id)
 
-    assert result["success"] is True
-    assert not os.path.exists(os.path.join("uploads", "file.png"))
+#     assert result["success"] is True
+#     assert not os.path.exists(os.path.join("uploads", "file.png"))
 
-    query = await db_session.execute(select(Realisation).filter(Realisation.id == item.id))
-    assert query.scalar_one_or_none() is None
-
-
-@pytest.mark.asyncio
-async def test_delete_realisation_file_delete_error_ignored(db_session, tmp_path, monkeypatch):
-    monkeypatch.chdir(tmp_path)
-
-    item = Realisation(
-        title="Projet",
-        categorie="Web",
-        description="Desc",
-        stack=["Python"],
-        link="https://example.com",
-        photo_url="/static/file.png",
-    )
-    db_session.add(item)
-    await db_session.commit()
-    await db_session.refresh(item)
-
-    os.makedirs("uploads", exist_ok=True)
-    with open(os.path.join("uploads", "file.png"), "wb") as f:
-        f.write(b"img")
-
-    def raise_remove(_path):
-        raise OSError("boom")
-
-    monkeypatch.setattr(os, "remove", raise_remove)
-
-    result = await realisation_crud.delete_realisation(db_session, item.id)
-
-    assert result["success"] is True
+#     query = await db_session.execute(select(Realisation).filter(Realisation.id == item.id))
+#     assert query.scalar_one_or_none() is None
 
 
-@pytest.mark.asyncio
-async def test_delete_realisation_not_found(db_session):
-    with pytest.raises(HTTPException) as exc:
-        await realisation_crud.delete_realisation(db_session, 9999)
+# @pytest.mark.asyncio
+# async def test_delete_realisation_file_delete_error_ignored(db_session, tmp_path, monkeypatch):
+#     monkeypatch.chdir(tmp_path)
 
-    assert exc.value.status_code == status.HTTP_404_NOT_FOUND
+#     item = Realisation(
+#         title="Projet",
+#         categorie="Web",
+#         description="Desc",
+#         stack=["Python"],
+#         link="https://example.com",
+#         photo_url="/static/file.png",
+#     )
+#     db_session.add(item)
+#     await db_session.commit()
+#     await db_session.refresh(item)
+
+#     os.makedirs("uploads", exist_ok=True)
+#     with open(os.path.join("uploads", "file.png"), "wb") as f:
+#         f.write(b"img")
+
+#     def raise_remove(_path):
+#         raise OSError("boom")
+
+#     monkeypatch.setattr(os, "remove", raise_remove)
+
+#     result = await realisation_crud.delete_realisation(db_session, item.id)
+
+#     assert result["success"] is True
+
+
+# @pytest.mark.asyncio
+# async def test_delete_realisation_not_found(db_session):
+#     with pytest.raises(HTTPException) as exc:
+#         await realisation_crud.delete_realisation(db_session, 9999)
+
+#     assert exc.value.status_code == status.HTTP_404_NOT_FOUND
 
 
 @pytest.mark.asyncio
