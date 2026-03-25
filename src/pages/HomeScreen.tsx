@@ -102,7 +102,7 @@ const HomeScreen = () => {
                   {user ? user.name : "Visiteur"}
                 </span>
               </h2>
-              <h1 className="text-4xl text-gray-800">
+              <h1 className="text-2xl md:text-4xl text-gray-800">
                 Que voulez-vous savoir au sujet de ONUtech?
               </h1>
             </div>
