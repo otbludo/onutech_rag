@@ -52,6 +52,12 @@ async def create_realisation(
                 detail=format_error(f"champs \"{field_name}\" manquant veuillez renseigner")
             )
             
+    if file is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=format_error("champs \"photo\" manquant veuillez renseigner")
+        )
+
     photo_url = None
     if file:
         upload_dir = "uploads"
