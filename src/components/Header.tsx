@@ -8,7 +8,7 @@ interface Props {
 
 export function Header({ setIsVisible }: Props) {
   return (
-    <header className="w-full p-4 flex justify-between items-start absolute top-0 left-0 z-10">
+    <header className="w-full p-4 flex justify-between items-start absolute md:fixed top-0 left-0 z-10">
       <div className="text-xl font-medium text-gray-700 tracking-tight">
         <div>
           <img src="./onutech.png" alt="" className="w-35 -mt-8" />

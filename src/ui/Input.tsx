@@ -38,7 +38,7 @@ export function Input({
   isreadOnly = false,
   value,
   onChange,
-  placeholder, // Assure-toi que cette prop est bien reçue
+  placeholder, 
   name,
   titleButtonSelectAutre = false,
   onAutres,
@@ -159,7 +159,6 @@ export function Input({
             name={name}
             value={value}
             onChange={onChange}
-            placeholder={placeholder} // Ajouté ici
             {...props}
           />
         ) : type === "file" ? (
@@ -198,7 +197,7 @@ export function Input({
               type="file"
               name={name}
               className="absolute inset-0 z-20 cursor-pointer opacity-0"
-              onChange={handleFileChange} // Utilise la fonction locale
+              onChange={handleFileChange} 
               {...props}
             />
           </div>
@@ -209,7 +208,7 @@ export function Input({
             className={`${baseInputStyles} ${className}`}
             value={value}
             onChange={onChange}
-            placeholder={placeholder} // Ajouté ici
+            placeholder={placeholder} 
             {...props}
           />
         )}

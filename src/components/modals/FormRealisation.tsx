@@ -36,9 +36,6 @@ type FormRealisationProps = {
   initialData?: RealisationInitialData | null;
 };
 
-/**
- * Modal de formulaire pour créer une réalisation.
- */
 export function FormRealisation({
   isOpen,
   onClose,
@@ -117,7 +114,10 @@ export function FormRealisation({
     formData.append("description", formValues.description.trim());
     formData.append("categorie", formValues.categorie);
     formData.append("link", formValues.link.trim());
-    formData.append("stack", JSON.stringify(stackChips));
+
+    // ICI : On envoie une chaîne de caractères brute séparée par des virgules
+    // Au lieu de JSON.stringify(["a", "b"]), on fait "a,b"
+    formData.append("stack", stackChips.join(","));
 
     if (photoFile) {
       formData.append("file", photoFile);

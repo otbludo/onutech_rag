@@ -11,9 +11,6 @@ interface ConfirmationProps {
   onConfirm?: () => void;
 }
 
-/**
- * UI component responsible for rendering the confirmation section.
- */
 export function Confirmation({
   closeConfirm,
   title,
@@ -21,10 +18,6 @@ export function Confirmation({
   isPendingDelete,
   onConfirm,
 }: ConfirmationProps) {
-
-  /**
-   * Handles confirm behavior.
-   */
   const handleConfirm = () => {
     if (onConfirm) onConfirm();
   };

@@ -49,29 +49,23 @@ const HomeScreen = () => {
     const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
     const payload = JSON.parse(window.atob(base64));
 
-    // On met à jour le state avec les vraies infos de Google
     setUser({
-      name: payload.given_name || payload.name, // "given_name" pour juste le prénom
+      name: payload.given_name || payload.name,
       email: payload.email,
       picture: payload.picture,
     });
   };
 
   useEffect(() => {
-    /* global google */
     if ((window as any).google) {
       google.accounts.id.initialize({
         client_id: CLIENT,
         callback: handleCallbackResponse,
       });
-
-      // Affiche le bouton standard
       google.accounts.id.renderButton(document.getElementById("signInDiv"), {
         theme: "outline",
         size: "large",
       });
-
-      // Affiche l'invite "One Tap" (le petit pop-up automatique)
       google.accounts.id.prompt();
     }
   }, []);
@@ -84,14 +78,10 @@ const HomeScreen = () => {
         <div className="absolute w-[400px] h-[400px] bg-pink-300 opacity-30 rounded-full blur-3xl top-[40%] left-[60%] mix-blend-screen light3"></div>
       </div>
       <Banner />
-      {/* <div id="signInDiv"></div> */}
-      {/* 1. Header Fixe en haut */}
       <Header setIsVisible={setIsVisible} />
       <FreeMap3D isVisible={isVisible} setIsVisible={setIsVisible} />
       <Galerie isVisible={isVisible} setIsVisible={setIsVisible} user={user} />
-      {/* 2. Zone de Contenu (Scrollable) */}
       <div className="flex-1 overflow-y-auto px-4 sm:px-6 w-full max-w-5xl mx-auto pt-8 pb-32">
-        {/* Affichage de la réponse si existante */}
         {showResponse && (
           <div className="mt-20">
             <Response
@@ -103,8 +93,6 @@ const HomeScreen = () => {
             />
           </div>
         )}
-
-        {/* Accueil (si pas de réponse) */}
         {!showResponse && (
           <div className="h-full flex flex-col items-center justify-center gap-10 z-2 mt-25">
             <div className="flex flex-col gap-2 px-2 md:px-8">
@@ -128,9 +116,7 @@ const HomeScreen = () => {
           </div>
         )}
       </div>
-
-      {/* 3. Zone d'Input Fixe en bas */}
-      <div className="fixed bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-slate-100 via-slate-100/90 to-transparent">
+      <div className="fixed z-3 bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-slate-100 via-slate-100/90 to-transparent">
         <div className="max-w-5xl mx-auto">
           <PromptInput
             value={prompt}

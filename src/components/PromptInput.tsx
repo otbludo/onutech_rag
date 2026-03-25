@@ -16,14 +16,17 @@ export function PromptInput({ value, onChange, onSend }: PromptInputProps) {
   React.useEffect(() => {
     if (!textareaRef.current) return;
     textareaRef.current.style.height = "0px";
-    const nextHeight = Math.min(textareaRef.current.scrollHeight, maxTextareaHeight);
+    const nextHeight = Math.min(
+      textareaRef.current.scrollHeight,
+      maxTextareaHeight,
+    );
     textareaRef.current.style.height = `${nextHeight}px`;
     textareaRef.current.style.overflowY =
       textareaRef.current.scrollHeight > maxTextareaHeight ? "auto" : "hidden";
   }, [value]);
 
   return (
-    <Card className="w-full max-w-[750px] mx-auto z-2 rounded-[28px] shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-gray-100 p-3 sm:p-4 flex flex-col gap-2 sm:gap-4 transition-shadow hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
+    <Card className="w-full max-w-[750px] mx-auto z-3 rounded-[28px] shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-gray-100 p-3 sm:p-4 flex flex-col gap-2 sm:gap-4 transition-shadow hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
       <div className="flex px-2 pt-2 items-end">
         <textarea
           ref={textareaRef}

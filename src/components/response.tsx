@@ -21,7 +21,6 @@ export function Response({
       variant="glass"
       className="w-full max-w-[900px] mx-auto flex flex-col gap-6 p-6 sm:p-8"
     >
-      {/* Bloc Question */}
       <div className="border-b border-gray-100 pb-6">
         <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
           Votre question
@@ -30,11 +29,8 @@ export function Response({
           {question || "Aucune question posée"}
         </p>
       </div>
-
-      {/* Bloc Réponse avec Logo */}
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-3">
-          {/* Conteneur du Logo */}
           <div className="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-100 shadow-sm">
             <img
               src="./onutech.png"
@@ -44,8 +40,6 @@ export function Response({
           </div>
           <span className="text-sm font-bold text-gray-800">Réponse</span>
         </div>
-
-        {/* Corps de la réponse */}
         <div className="text-gray-700 text-base sm:text-lg leading-relaxed pl-11">
           {answer ? (
             <p className="whitespace-pre-wrap">{answer}</p>

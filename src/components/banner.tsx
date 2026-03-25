@@ -22,7 +22,7 @@ export function Banner() {
   ];
 
   return (
-    <div className="absolute inset-0 opacity-80 flex flex-col justify-between py-10">
+    <div className="fixed inset-0 opacity-80 flex flex-col justify-between py-10">
       <WavyMarquee
         id="mainLoop"
         text={automationServices}

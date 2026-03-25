@@ -122,7 +122,6 @@ export function Galerie({ isVisible, user, setIsVisible }: Props) {
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-[1400px] h-[100vh] md:h-auto md:max-h-[90vh] bg-white text-gray-900 flex flex-col md:rounded-2xl overflow-hidden shadow-2xl"
       >
-        {/* HEADER : Navigation par catégories */}
         <header className="px-4 sm:px-6 lg:px-8 pt-4 md:pt-6">
           <div className="flex justify-between">
             <div className="flex items-center gap-2 mb-2">
@@ -176,8 +175,6 @@ export function Galerie({ isVisible, user, setIsVisible }: Props) {
             </div>
           </div>
         </header>
-
-        {/* MAIN : Grille des réalisations filtrées */}
         <main className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-8">
           {isLoadingRealisation ? (
             <div className="flex justify-center py-20">Chargement...</div>
@@ -196,7 +193,6 @@ export function Galerie({ isVisible, user, setIsVisible }: Props) {
                   className="flex flex-col group animate-in fade-in duration-500"
                 >
                   <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-4 bg-gray-100 shadow-sm border border-gray-100">
-                    {/* Image avec zoom au survol */}
                     <img
                       src={`${API_URL}${item.photo_url}?v=${encodeURIComponent(
                         item.updated_at ?? item.created_at ?? item.id,
@@ -204,8 +200,6 @@ export function Galerie({ isVisible, user, setIsVisible }: Props) {
                       alt={item.title}
                       className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                     />
-
-                    {/* OVERLAY STACK : Apparaît au survol (hover) */}
                     <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center p-4 text-center">
                       <p className="text-white text-xs font-semibold uppercase tracking-wider mb-3 opacity-80">
                         Technologies utilisées
@@ -221,15 +215,11 @@ export function Galerie({ isVisible, user, setIsVisible }: Props) {
                         ))}
                       </div>
                     </div>
-
-                    {/* Badge Catégorie (visible par défaut, s'efface au survol pour laisser place à la stack) */}
                     <div className="absolute bottom-3 left-3 group-hover:opacity-0 transition-opacity">
                       <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-white text-black rounded-lg shadow-sm">
                         {item.title}
                       </span>
                     </div>
-
-                    {/* Menu Actions (toujours accessible au survol) */}
                     {user?.email === EMAIL && (
                       <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-20">
                         <Button
@@ -237,7 +227,7 @@ export function Galerie({ isVisible, user, setIsVisible }: Props) {
                           size="icon"
                           ref={openMenuId === item.id ? triggerRef : null}
                           onClick={(e) => {
-                            e.stopPropagation(); // Évite de déclencher d'autres clics
+                            e.stopPropagation();
                             setOpenMenuId(
                               openMenuId === item.id ? null : item.id,
                             );

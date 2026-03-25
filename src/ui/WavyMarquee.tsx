@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 interface WavyMarqueeProps {
-  text: string | string[]; // Accepte un texte unique ou une liste
+  text: string | string[];
   id: string;
   pathDefinition: string;
   speed?: number;
@@ -17,9 +17,7 @@ export function WavyMarquee({
 }: WavyMarqueeProps) {
   const textPathRef = useRef<SVGTextPathElement>(null);
 
-  // Si c'est un tableau, on joint les mots avec un point, sinon on garde le texte
   const displayContent = Array.isArray(text) ? text.join("  •  ") : text;
-  // On répète pour remplir le chemin
   const repeatedText = `${displayContent}  •  `.repeat(20);
 
   useEffect(() => {
@@ -54,7 +52,7 @@ export function WavyMarquee({
           strokeLinecap="round"
         />
         <text
-          className="font-black tracking-tighter"
+          className="font-black"
           style={{ fontSize: "9px", fill: "white" }}
           dominantBaseline="middle"
           textAnchor="middle"

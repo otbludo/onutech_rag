@@ -28,7 +28,7 @@ export function SuggestionChips({ setIsVisible, onSelectSuggestion }: Props) {
   const chips = [
     {
       icon: "🏢",
-      text: "À propos de ONUtech",
+      text: "À propos",
       onClick: () => onSelectSuggestion("A propos de ONUtech"),
     },
     {
@@ -38,7 +38,7 @@ export function SuggestionChips({ setIsVisible, onSelectSuggestion }: Props) {
     },
     {
       icon: "🚀",
-      text: "Quels sont les secteurs d'activités",
+      text: "Secteurs d'activités",
       onClick: () => onSelectSuggestion("Quels sont les secteurs d'activités"),
     },
     {
