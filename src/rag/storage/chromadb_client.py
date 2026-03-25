@@ -3,16 +3,15 @@ from dotenv import load_dotenv
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import Chroma
 
-# Charger les variables d'environnement
 load_dotenv()
 
-def save_to_chroma(chunks, persist_directory="./chroma_db"):
+def save_to_chroma(chunks, persist_directory="./src/rag/chroma_db"):
     """
     Vectorise les morceaux de texte et les enregistre dans ChromaDB.
     """
     api_key = os.getenv("GOOGLE_API_KEY")
     if not api_key:
-        raise ValueError("La clé API GOOGLE_API_KEY est manquante dans le fichier .env")
+        raise ValueError("La clé API GOOGLE_API_KEY est manquante dans l'environnement ")
     
     print("--- Initialisation de la vectorisation (Gemini) ---")
     embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")

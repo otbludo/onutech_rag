@@ -19,7 +19,6 @@ async def seed_categories():
     async with AsyncSessionLocal() as db:
         try:
             for cat_data in CATEGORIES_TO_SEED:
-                # Vérifier si la catégorie existe déjà pour éviter les doublons
                 stmt = select(Category).filter(Category.title == cat_data["title"])
                 result = await db.execute(stmt)
                 existing_cat = result.scalar_one_or_none()
@@ -31,7 +30,6 @@ async def seed_categories():
                 else:
                     print(f"⏩ Déjà présent : {cat_data['title']}")
 
-            # On valide toutes les insertions d'un coup
             await db.commit()
             print("🚀 Seed terminé avec succès !")
             

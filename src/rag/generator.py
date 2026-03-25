@@ -8,10 +8,8 @@ from src.rag.retriever import get_retriever
 load_dotenv()
 
 def generate_answer(question: str):
-    # On utilise toujours Gemini pour les vecteurs
     retriever = get_retriever()
-    
-    # Le "cerveau" pour Groq
+ 
     llm = ChatGroq(
         model="llama-3.3-70b-versatile",
         temperature=0.3,
@@ -27,13 +25,12 @@ def generate_answer(question: str):
     Question : {question}
     """)
 
-    # Chaîne de traitement
+    """Chaîne de traitement"""
     chain = prompt | llm | StrOutputParser()
     
-    # Récupération et exécution
+    """Récupération et exécution"""
     docs = retriever.invoke(question)
     context_text = "\n\n".join([doc.page_content for doc in docs])
-    
     answer = chain.invoke({"context": context_text, "question": question})
     
     return {

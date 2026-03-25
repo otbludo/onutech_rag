@@ -24,36 +24,16 @@ async def create(
     file: UploadFile = File(None),
     db: AsyncSession = Depends(get_db)
 ):
-    # Création du dossier et gestion du nom de fichier unique
-    upload_dir = "uploads"
-    os.makedirs(upload_dir, exist_ok=True)
-    
-    photo_url = None
-    if file:
-        # Extraction de l'extension originale (.jpg, .png, etc.)
-        ext = os.path.splitext(file.filename)[1]
-
-        # Génération d'un nom unique : 20260316_221530_nom_original.jpg
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        unique_filename = f"{timestamp}_{file.filename}"
-        file_path = os.path.join(upload_dir, unique_filename)
-
-        # Sauvegarde physique du fichier
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-        photo_url = f"/static/{unique_filename}"  # On stocke le nouveau nom
-        
-    # Préparation du modèle avec le lien unique
     item = schemas.RealisationCreate(
         title=title,
         categorie=categorie,
         description=description,
-        stack=stack.split(","),
+        stack=stack.split(",") if stack else None,
         link=link,
-        photo_url=photo_url
+        photo_url=None
     )
-    
-    return await crud.create_realisation(db, item)
+
+    return await crud.create_realisation(db, item, file)
 
 #-----------------------------------------------------------------------------
 # recuperation
@@ -78,32 +58,16 @@ async def update(
     file: UploadFile = File(None),
     db: AsyncSession = Depends(get_db)
 ):
-    photo_url = None
-    if file:
-        # Preparation du nom unique
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        unique_filename = f"{timestamp}_{file.filename}"
-        file_path = os.path.join("uploads", unique_filename)
-        
-        # Sauvegarde physique
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-        photo_url = f"/static/{unique_filename}"
-
-    # Inersion des champs non null
     update_data = {
         "title": title,
         "categorie": categorie,
         "description": description,
         "stack": stack.split(",") if stack else None,
-        "link": link,
-        "photo_url": photo_url
+        "link": link
     }
-    
-    # Netoyage du dictionnaire des valeurs None pour ne pas écraser l'existant
-    update_data = {k: v for k, v in update_data.items() if v is not None}
 
-    return await crud.update_realisation(db, item_id, update_data)
+    update_data = {k: v for k, v in update_data.items() if v is not None}
+    return await crud.update_realisation(db, item_id, update_data, file)
 
 #-----------------------------------------------------------------------------
 # suppresion

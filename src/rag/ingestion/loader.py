@@ -14,7 +14,7 @@ def load_all_pdfs(directory_path: str):
                 loader = PyPDFLoader(file_path)
                 docs = loader.load()
                 
-                # Ajout du nom du fichier dans les métadonnées de chaque page
+                """Ajout du nom du fichier dans les métadonnées de chaque page"""
                 for doc in docs:
                     doc.metadata["source"] = filename
                 

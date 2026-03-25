@@ -4,13 +4,21 @@ Backend FastAPI pour un moteur RAG (retrieval‑augmented generation) + gestion 
 
 ## Sommaire
 
-- [Aperçu](#aperçu)
-- [Fonctionnalités](#fonctionnalités)
-- [Architecture rapide](#architecture-rapide)
-- [API](#api)
-- [Configuration](#configuration)
-- [Démarrage](#démarrage)
-- [Ingestion RAG](#ingestion-rag)
+- [ONUTech RAG Backend](#onutech-rag-backend)
+  - [Sommaire](#sommaire)
+  - [Aperçu](#aperçu)
+  - [Fonctionnalités](#fonctionnalités)
+  - [Architecture rapide](#architecture-rapide)
+  - [API](#api)
+    - [Chat / RAG](#chat--rag)
+    - [Catégories](#catégories)
+    - [Réalisations](#réalisations)
+  - [Configuration](#configuration)
+    - [Base de données SQLite](#base-de-données-sqlite)
+  - [Démarrage](#démarrage)
+  - [Migrations (Alembic)](#migrations-alembic)
+  - [Initialiser les données (seed)](#initialiser-les-données-seed)
+  - [Ingestion RAG](#ingestion-rag)
 
 ## Aperçu
 
@@ -101,12 +109,42 @@ GOOGLE_API_KEY=...
 GROQ_API_KEY=...
 ```
 
+### Base de données SQLite
+
+La base est configurée via la variable d’environnement `DATABSE_URL` (orthographe identique au code).
+
+Exemple pour SQLite (fichier local) :
+
+```bash
+DATABSE_URL=sqlite+aiosqlite:///./src/database/database.db
+```
+
 ## Démarrage
 
 1. Installer les dépendances Python.
 2. Lancer l’API FastAPI (ex. `uvicorn src.main:app --reload`).
 
 La racine `/` répond : `{"status": "Backend ONUTech RAG actif"}`.
+
+## Migrations (Alembic)
+
+Les migrations sont stockées dans `src/database/migrations/`.
+
+Commandes usuelles :
+
+```bash
+alembic -c src/database/migrations/alembic.ini revision --autogenerate -m "message"
+alembic -c src/database/migrations/alembic.ini upgrade head
+alembic -c src/database/migrations/alembic.ini downgrade -1
+```
+
+## Initialiser les données (seed)
+
+Exécuter le script de seed :
+
+```bash
+PYTHONPATH=. python src/database/seed.py
+```
 
 ## Ingestion RAG
 
