@@ -270,7 +270,7 @@ export function Galerie({ isVisible, user, setIsVisible }: Props) {
           <Confirmation
             closeConfirm={() => setIsConfirmOpen(null)}
             isPendingDelete={isPendingDelete}
-            title={`Supprimer la réalisation ${isConfirmOpen}`}
+            title={`Supprimer la réalisation`}
             description="Cette action est irréversible. Voulez-vous continuer ?"
             onConfirm={handleConfirmDelete}
           />
