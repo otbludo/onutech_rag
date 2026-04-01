@@ -24,7 +24,7 @@ export function FreeMap3D({ isVisible, setIsVisible }: Props) {
           onClick={() => setIsVisible(0)}
           variant="ghost"
           size="icon"
-          className="absolute top-4 left-4 z-[60] bg-white/80 rounded-full shadow-md hover:bg-white"
+          className="absolute top-4 left-4 z-[1001] bg-white/80 rounded-full shadow-md hover:bg-white"
           aria-label="Fermer"
         >
           <X size={20} strokeWidth={2.5} />

@@ -20,7 +20,7 @@ export function Header({ setIsVisible }: Props) {
           onClick={() => setIsVisible(1)}
           variant="secondary"
           size="none"
-          className="shadow-sm hover:shadow-md transition-all text-[12px] md:text-sm p-[10px] md:p-3 px-3 md:h-10 md:p-0 md:px-4"
+          className="shadow-sm hover:shadow-md transition-all text-[12px] md:text-sm p-[8px] px-[8px]  md:h-10 md:px-4"
         >
           {Icons.Pin}
           <span className="hidden md:block">Localisation</span>

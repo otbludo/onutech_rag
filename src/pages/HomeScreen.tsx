@@ -17,6 +17,13 @@ type AskQuestionResponse = {
   };
 };
 
+type ChatMessage = {
+  question: string;
+  answer: string;
+};
+
+const CHAT_HISTORY_STORAGE_KEY = "chat_history";
+
 type UserProfile = {
   name: string;
   email: string;
@@ -32,15 +39,47 @@ const HomeScreen = () => {
   const [prompt, setPrompt] = React.useState("");
   const [showResponse, setShowResponse] = React.useState(false);
   const [lastQuestion, setLastQuestion] = React.useState("");
+  const [messages, setMessages] = React.useState<ChatMessage[]>([]);
   const { mutate, isPending, data, error, isError } = useAskQuestion();
   const [isVisible, setIsVisible] = useState<number>(0);
+
+  const persistMessages = React.useCallback(
+    (updater: (prev: ChatMessage[]) => ChatMessage[]) => {
+      setMessages((prev) => {
+        const next = updater(prev);
+        try {
+          sessionStorage.setItem(CHAT_HISTORY_STORAGE_KEY, JSON.stringify(next));
+        } catch (storageError) {
+          console.error("Impossible de persister l'historique", storageError);
+        }
+        return next;
+      });
+    },
+    []
+  );
 
   const handleSend = (overrideQuestion?: string) => {
     const question = (overrideQuestion ?? prompt).trim();
     if (!question) return;
     setLastQuestion(question);
     setShowResponse(true);
-    mutate({ question, session_id: "string" });
+    mutate(
+      { question, session_id: "string" },
+      {
+        onSuccess: (response: AskQuestionResponse | undefined) => {
+          const answerPayload = response?.answer;
+          if (answerPayload?.answer) {
+            persistMessages((prev) => [
+              ...prev,
+              {
+                question: answerPayload.question || question,
+                answer: answerPayload.answer,
+              },
+            ]);
+          }
+        },
+      }
+    );
   };
 
   const handleCallbackResponse = (response: any) => {
@@ -55,6 +94,22 @@ const HomeScreen = () => {
       picture: payload.picture,
     });
   };
+
+  useEffect(() => {
+    const savedHistory = sessionStorage.getItem(CHAT_HISTORY_STORAGE_KEY);
+    if (savedHistory) {
+      try {
+        const parsedHistory: ChatMessage[] = JSON.parse(savedHistory);
+        setMessages(parsedHistory);
+        if (parsedHistory.length > 0) {
+          setLastQuestion(parsedHistory[parsedHistory.length - 1].question);
+          setShowResponse(true);
+        }
+      } catch (storageError) {
+        console.error("Impossible de charger l'historique", storageError);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if ((window as any).google) {
@@ -81,12 +136,13 @@ const HomeScreen = () => {
       <Header setIsVisible={setIsVisible} />
       <FreeMap3D isVisible={isVisible} setIsVisible={setIsVisible} />
       <Galerie isVisible={isVisible} setIsVisible={setIsVisible} user={user} />
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 w-full max-w-5xl mx-auto pt-8 pb-32">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 w-full max-w-5xl mx-auto pt-8 pb-32 md:pb-40">
         {showResponse && (
           <div className="mt-20">
             <Response
               question={lastQuestion}
               answer={(data as AskQuestionResponse | undefined)?.answer?.answer}
+              history={messages}
               isPending={isPending}
               isError={isError}
               error={error}

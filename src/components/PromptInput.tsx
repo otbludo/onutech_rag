@@ -13,6 +13,15 @@ export function PromptInput({ value, onChange, onSend }: PromptInputProps) {
   const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
   const maxTextareaHeight = 180;
 
+  const handleSend = () => {
+    onSend();
+    onChange("");
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "0px";
+      textareaRef.current.style.overflowY = "hidden";
+    }
+  };
+
   React.useEffect(() => {
     if (!textareaRef.current) return;
     textareaRef.current.style.height = "0px";
@@ -51,7 +60,7 @@ export function PromptInput({ value, onChange, onSend }: PromptInputProps) {
             size="icon"
             className="rounded-full text-gray-600 !bg-black !shadow-xl"
             aria-label="Utiliser le microphone"
-            onClick={onSend}
+            onClick={handleSend}
           >
             <Send className="w-5 h-5 text-white" />
           </Button>
