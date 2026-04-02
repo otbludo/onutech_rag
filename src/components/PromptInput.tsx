@@ -40,7 +40,7 @@ export function PromptInput({ value, onChange, onSend }: PromptInputProps) {
         <textarea
           ref={textareaRef}
           className="w-full flex-1 bg-transparent resize-none outline-none text-gray-800 placeholder:text-gray-500 min-h-[48px] sm:min-h-[60px] max-h-[180px] text-base sm:text-lg leading-relaxed overflow-y-auto no-scrollbar"
-          placeholder="Demander à Gemini 3"
+          placeholder="Posez votre question à ONUtech..."
           rows={1}
           aria-label="Saisissez votre prompt ici"
           value={value}
