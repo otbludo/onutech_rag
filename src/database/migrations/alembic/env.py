@@ -4,24 +4,31 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 from alembic import context
 
-# --- CETTE SECTION DOIT ÊTRE AVANT TOUT IMPORT DE 'src' ---
-# On remonte de: src/database/migrations/alembic/env.py (4 niveaux)
+# --- CONFIGURATION DU CHEMIN RACINE ---
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../'))
 sys.path.insert(0, ROOT_DIR)
-# ---------------------------------------------------------
 
-# Maintenant tu peux importer src
+# Import de tes modèles pour l'autogénération
 from src.database.database import Base
 from src.database.models.models import Realisation
 
-# Configuration dynamique de l'URL SQLite
-DB_PATH = os.path.join(ROOT_DIR, "src", "database", "database.db")
-SQLALCHEMY_URL = f"sqlite:///{DB_PATH}"
+# --- LOGIQUE D'URL DYNAMIQUE (NEON vs SQLITE) ---
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL:
+    # Alembic est synchrone : il utilise 'postgresql://' (psycopg2)
+    # On nettoie l'URL au cas où elle contiendrait '+asyncpg'
+    SQLALCHEMY_URL = DATABASE_URL.replace("postgresql+asyncpg://", "postgresql://")
+    print("--- [ALEMBIC] : CONNEXION À NEON POSTGRESQL ---")
+else:
+    # Backup local pour tes tests sur ton PC
+    DB_PATH = os.path.join(ROOT_DIR, "src", "database", "database.db")
+    SQLALCHEMY_URL = f"sqlite:///{DB_PATH}"
+    print(f"--- [ALEMBIC] : CONNEXION À SQLITE LOCALE ({DB_PATH}) ---")
 
 config = context.config
 config.set_main_option("sqlalchemy.url", SQLALCHEMY_URL)
 
-# Le reste du fichier (fileConfig, run_migrations, etc.) ne change pas...
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 

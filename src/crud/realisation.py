@@ -1,5 +1,5 @@
-import os
 import shutil
+from fastapi import BackgroundTasks
 from datetime import datetime
 from fastapi import UploadFile
 from fastapi import status, HTTPException
@@ -8,7 +8,9 @@ from sqlalchemy.future import select
 from src.database.models.models import Realisation
 from src.schema import realisation as schemas
 from src.messages.succes import format_success, MSG_RETRIEVED, MSG_CREATED, MSG_UPDATED, MSG_DELETED
-from src.messages.error import format_error, NOT_FOUND_MSG, FILE_DELETE_ERROR_MSG
+from src.messages.error import format_error, NOT_FOUND_MSG
+from src.crud.worker import background_upload_and_save, background_delete_image
+
 
 #-----------------------------------------------------------------------------
 # recuperation
@@ -19,13 +21,14 @@ async def get_realisations(db: AsyncSession):
     realisations = result.scalars().all()
     return format_success(MSG_RETRIEVED, data=realisations)
 
-#-----------------------------------------------------------------------------
-# creation
-#-----------------------------------------------------------------------------
 
+#-----------------------------------------------------------------------------
+# CRÉATION (Queue implémentée)
+#-----------------------------------------------------------------------------
 async def create_realisation(
-    db: AsyncSession,
-    item: schemas.RealisationCreate,
+    db: AsyncSession, 
+    item: schemas.RealisationCreate, 
+    background_tasks: BackgroundTasks, 
     file: UploadFile | None = None
 ):
     item_data = item.model_dump()
@@ -55,105 +58,72 @@ async def create_realisation(
     if file is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=format_error("champs \"photo\" manquant veuillez renseigner")
+            detail=format_error("Le fichier image (file) est manquant.")
         )
-
-    photo_url = None
-    if file:
-        upload_dir = "uploads"
-        os.makedirs(upload_dir, exist_ok=True)
-
-        ext = os.path.splitext(file.filename)[1]
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        unique_filename = f"{timestamp}_{file.filename}"
-        file_path = os.path.join(upload_dir, unique_filename)
-
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-        photo_url = f"/static/{unique_filename}"
-
-    item_data["photo_url"] = photo_url
 
     db_item = Realisation(**item_data) 
     db.add(db_item)
     await db.commit()      
     await db.refresh(db_item)
-    return format_success(MSG_CREATED, data=db_item, code=status.HTTP_201_CREATED)
+
+    temp_path = f"temp_{datetime.now().timestamp()}_{file.filename}"
+    with open(temp_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    from src.database.database import AsyncSessionLocal
+    background_tasks.add_task(background_upload_and_save, AsyncSessionLocal, db_item.id, temp_path)
+
+    return format_success(MSG_CREATED, data=db_item)
+
 
 #-----------------------------------------------------------------------------
-# mise a jour
+# MISE À JOUR (Queue implémentée)
 #-----------------------------------------------------------------------------
-
 async def update_realisation(
-    db: AsyncSession,
-    item_id: int,
-    update_data: dict,
+    db: AsyncSession, 
+    item_id: int, 
+    update_data: dict, 
+    background_tasks: BackgroundTasks, 
     file: UploadFile | None = None
 ):
     result = await db.execute(select(Realisation).filter(Realisation.id == item_id))
     db_item = result.scalar_one_or_none()
     
     if not db_item:
-         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=format_error(NOT_FOUND_MSG, code=status.HTTP_404_NOT_FOUND)
-        )
+         raise HTTPException(status_code=404, detail=NOT_FOUND_MSG)
     
-    photo_url = None
     if file:
-        upload_dir = "uploads"
-        os.makedirs(upload_dir, exist_ok=True)
+        if db_item.photo_url:
+            background_tasks.add_task(background_delete_image, db_item.photo_url)
 
-        ext = os.path.splitext(file.filename)[1]
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        unique_filename = f"{timestamp}_{file.filename}"
-        file_path = os.path.join(upload_dir, unique_filename)
-
-        with open(file_path, "wb") as buffer:
+        temp_path = f"temp_upd_{datetime.now().timestamp()}_{file.filename}"
+        with open(temp_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
-        photo_url = f"/static/{unique_filename}"
-
-    if photo_url is not None:
-        update_data["photo_url"] = photo_url
-
-    if "photo_url" in update_data and db_item.photo_url:
-        old_file_path = os.path.join("uploads", db_item.photo_url.replace("/static/", ""))
-        if os.path.exists(old_file_path):
-            try:
-                os.remove(old_file_path)
-            except Exception as e:
-                format_error(f"{FILE_DELETE_ERROR_MSG} : {e}", status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        from src.database.database import AsyncSessionLocal
+        background_tasks.add_task(background_upload_and_save, AsyncSessionLocal, db_item.id, temp_path)
 
     for key, value in update_data.items():
-        setattr(db_item, key, value)
+        if key != "photo_url": 
+            setattr(db_item, key, value)
         
     await db.commit()
     await db.refresh(db_item)
     return format_success(MSG_UPDATED, data=db_item)
 
-#-----------------------------------------------------------------------------
-# suppresion
-#-----------------------------------------------------------------------------
 
-async def delete_realisation(db: AsyncSession, item_id: int):
+#-----------------------------------------------------------------------------
+# SUPPRESSION (Queue implémentée)
+#-----------------------------------------------------------------------------
+async def delete_realisation(db: AsyncSession, item_id: int, background_tasks: BackgroundTasks):
     result = await db.execute(select(Realisation).filter(Realisation.id == item_id))
     db_item = result.scalar_one_or_none()
     
     if not db_item:
-        raise HTTPException( 
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=format_error(NOT_FOUND_MSG, code=status.HTTP_404_NOT_FOUND)
-        )
-    
+        raise HTTPException(status_code=404, detail=NOT_FOUND_MSG)
+
     if db_item.photo_url:
-        filename = db_item.photo_url.replace("/static/", "")
-        file_path = os.path.join("uploads", filename)
-        
-        if os.path.exists(file_path):
-            try:
-                os.remove(file_path)
-            except Exception as e:
-                format_error(f"{FILE_DELETE_ERROR_MSG} : {e}", status.HTTP_500_INTERNAL_SERVER_ERROR)
+        background_tasks.add_task(background_delete_image, db_item.photo_url)
 
     await db.delete(db_item)
     await db.commit()
