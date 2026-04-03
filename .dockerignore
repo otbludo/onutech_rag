@@ -5,3 +5,5 @@ tests/
 tests_test.db
 .pytest_cache/
 pyproject.toml
+src/rag/chroma_db/
+chroma_db/
