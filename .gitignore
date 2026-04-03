@@ -3,4 +3,3 @@ venv/
 pyproject.toml
 src/rag/chroma_db/
 chroma_db/
-src/rag/data/iot_cours_général.pdf
