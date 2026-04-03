@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# On rend le script de démarrage exécutable
+# rend le script de démarrage exécutable
 RUN chmod +x start.sh
 
 # Pour que Python trouve le module 'src' correctement
