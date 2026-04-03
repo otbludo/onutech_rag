@@ -16,8 +16,6 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 
 setup_cors(app)
 
-app.mount("/static", StaticFiles(directory="uploads"), name="static")
-
 app.include_router(chat_router, prefix="/api/v1")
 app.include_router(category_router, prefix="/api/v1")
 app.include_router(realisation_router, prefix="/api/v1")

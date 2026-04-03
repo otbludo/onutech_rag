@@ -14,12 +14,11 @@ Backend FastAPI pour un moteur RAG (retrieval‑augmented generation) + gestion 
     - [Catégories](#catégories)
     - [Réalisations](#réalisations)
   - [Configuration](#configuration)
-    - [Base de données SQLite](#base-de-données-sqlite)
+    - [Base de données (Neon PostgreSQL recommandée)](#base-de-données-neon-postgresql-recommandée)
   - [Démarrage](#démarrage)
   - [Migrations (Alembic)](#migrations-alembic)
   - [Initialiser les données (seed)](#initialiser-les-données-seed)
   - [Ingestion RAG](#ingestion-rag)
-  - [Tests](#tests)
 
 ## Aperçu
 
@@ -42,30 +41,30 @@ Le stockage est local (SQLite) et la recherche RAG repose sur ChromaDB et des em
 ## Architecture rapide
 
 ```
+├── alembic.ini
 ├── check_models.py
 ├── Dockerfile
 ├── pyproject.toml
-├── pytest.ini
 ├── README.md
 ├── requirements.txt
+├── skills-lock.json
 ├── src
 │   ├── crud
 │   │   ├── category.py
-│   │   └── realisation.py
+│   │   ├── realisation.py
+│   │   └── worker.py
 │   ├── database
-│   │   ├── database.db
 │   │   ├── database.py
 │   │   ├── migrations
-│   │   │   ├── alembic
-│   │   │   │   ├── env.py
-│   │   │   │   ├── README
-│   │   │   │   ├── script.py.mako
-│   │   │   │   └── versions
-│   │   │   │       ├── 6cd2edcfbab2_update_realisations_ajout_colonne_link.py
-│   │   │   │       ├── 713c3a84db8f_initial_setup.py
-│   │   │   │       ├── 92ea919cb1b2_message.py
-│   │   │   │       └── fea55c801064_ajout_table_categry.py
-│   │   │   └── alembic.ini
+│   │   │   └── alembic
+│   │   │       ├── env.py
+│   │   │       ├── README
+│   │   │       ├── script.py.mako
+│   │   │       └── versions
+│   │   │           ├── 6cd2edcfbab2_update_realisations_ajout_colonne_link.py
+│   │   │           ├── 713c3a84db8f_initial_setup.py
+│   │   │           ├── 92ea919cb1b2_message.py
+│   │   │           └── fea55c801064_ajout_table_categry.py
 │   │   ├── models
 │   │   │   └── models.py
 │   │   └── seed.py
@@ -100,23 +99,12 @@ Le stockage est local (SQLite) et la recherche RAG repose sur ChromaDB et des em
 │   │   ├── category.py
 │   │   ├── chat.py
 │   │   └── realisation.py
-│   └── schema
-│       ├── query.py
-│       └── realisation.py
-├── tests
-│   ├── conftest.py
-│   ├── test_crud_category.py
-│   ├── test_crud_realisation.py
-│   ├── test_rag_generator.py
-│   ├── test_rag_ingestion.py
-│   ├── test_rag_retriever.py
-│   ├── test_rag_storage.py
-│   ├── test_routes_category.py
-│   ├── test_routes_chat.py
-│   └── test_routes_realisation.py
-├── tests_test.db
-└── uploads
-    └── 20260319_112749_154shots_so.png
+│   ├── schema
+│   │   ├── query.py
+│   │   └── realisation.py
+│   └── utils
+│       └── cloudinary_config.py
+└── start.sh
 
 ```
 
@@ -189,14 +177,18 @@ GOOGLE_API_KEY=...
 GROQ_API_KEY=...
 ```
 
-### Base de données SQLite
+### Base de données (Neon PostgreSQL recommandée)
 
-La base est configurée via la variable d’environnement `DATABSE_URL` (orthographe identique au code).
-
-Exemple pour SQLite (fichier local) :
+La base est configurée via la variable d’environnement `DATABASE_URL` (ou `TEST_DATABASE_URL` pour les tests). Exemple Neon :
 
 ```bash
-DATABSE_URL=sqlite+aiosqlite:///./src/database/database.db
+DATABASE_URL=postgresql://<user>:<password>@<host>/<db>?sslmode=require
+```
+
+Pour un fallback local SQLite (développement hors ligne) :
+
+```bash
+DATABASE_URL=sqlite+aiosqlite:///./src/database/database.db
 ```
 
 ## Démarrage
@@ -239,37 +231,3 @@ Le script :
 1. Charge les PDFs,
 2. Découpe en chunks,
 3. Stocke dans ChromaDB (`./chroma_db`).
-
-## Tests
-
-Installer les dépendances (incluant `pytest`, `pytest-asyncio`, `pytest-cov`) :
-
-```bash
-pip install -r requirements.txt
-```
-
-Lancer tous les tests :
-
-```bash
-pytest tests/
-```
-
-Lancer la couverture de code :
-
-```bash
-pytest --cov=src
-```
-
-Exemple de couverture actuelle (résumé) :
-
-```
-TOTAL                                  336     30    91%
-```
-
-Générer un rapport HTML :
-
-```bash
-pytest --cov=src --cov-report=html
-```
-
-Puis ouvrir : `htmlcov/index.html` ou `xdg-open htmlcov/index.html`

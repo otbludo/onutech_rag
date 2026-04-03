@@ -3,6 +3,7 @@ from sqlalchemy.future import select
 from src.database.models.models import Realisation
 from src.utils.cloudinary_config import upload_image, delete_image
 
+
 async def background_upload_and_save(db_factory, item_id, temp_path):
     """Gère l'upload et met à jour l'URL dans Neon une fois fini."""
     photo_url = upload_image(temp_path)
