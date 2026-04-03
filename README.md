@@ -41,6 +41,85 @@ Le stockage est local (SQLite) et la recherche RAG repose sur ChromaDB et des em
 
 ## Architecture rapide
 
+```
+├── check_models.py
+├── Dockerfile
+├── pyproject.toml
+├── pytest.ini
+├── README.md
+├── requirements.txt
+├── src
+│   ├── crud
+│   │   ├── category.py
+│   │   └── realisation.py
+│   ├── database
+│   │   ├── database.db
+│   │   ├── database.py
+│   │   ├── migrations
+│   │   │   ├── alembic
+│   │   │   │   ├── env.py
+│   │   │   │   ├── README
+│   │   │   │   ├── script.py.mako
+│   │   │   │   └── versions
+│   │   │   │       ├── 6cd2edcfbab2_update_realisations_ajout_colonne_link.py
+│   │   │   │       ├── 713c3a84db8f_initial_setup.py
+│   │   │   │       ├── 92ea919cb1b2_message.py
+│   │   │   │       └── fea55c801064_ajout_table_categry.py
+│   │   │   └── alembic.ini
+│   │   ├── models
+│   │   │   └── models.py
+│   │   └── seed.py
+│   ├── __init__.py
+│   ├── main.py
+│   ├── messages
+│   │   ├── error.py
+│   │   └── succes.py
+│   ├── middleware
+│   │   └── cors.py
+│   ├── rag
+│   │   ├── chroma_db
+│   │   │   ├── 087d0952-b2a2-4331-ae5a-33d3e6c6b8c2
+│   │   │   │   ├── data_level0.bin
+│   │   │   │   ├── header.bin
+│   │   │   │   ├── length.bin
+│   │   │   │   └── link_lists.bin
+│   │   │   └── chroma.sqlite3
+│   │   ├── data
+│   │   │   └── iot_cours_général.pdf
+│   │   ├── generator.py
+│   │   ├── ingestion
+│   │   │   ├── __init__.py
+│   │   │   ├── loader.py
+│   │   │   └── processor.py
+│   │   ├── __init__.py
+│   │   ├── retriever.py
+│   │   ├── storage
+│   │   │   └── chromadb_client.py
+│   │   └── test_rag.py
+│   ├── routes
+│   │   ├── category.py
+│   │   ├── chat.py
+│   │   └── realisation.py
+│   └── schema
+│       ├── query.py
+│       └── realisation.py
+├── tests
+│   ├── conftest.py
+│   ├── test_crud_category.py
+│   ├── test_crud_realisation.py
+│   ├── test_rag_generator.py
+│   ├── test_rag_ingestion.py
+│   ├── test_rag_retriever.py
+│   ├── test_rag_storage.py
+│   ├── test_routes_category.py
+│   ├── test_routes_chat.py
+│   └── test_routes_realisation.py
+├── tests_test.db
+└── uploads
+    └── 20260319_112749_154shots_so.png
+
+```
+
 - Point d’entrée FastAPI : `src/main.py`
 - Middleware CORS : `src/middleware/cors.py`
 - Routes API :

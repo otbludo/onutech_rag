@@ -1,0 +1,7 @@
+venv/
+.git/
+__pycache__/
+tests/
+tests_test.db
+.pytest_cache/
+pyproject.toml
