@@ -1,23 +1,24 @@
 FROM python:3.12-slim
 
+WORKDIR /app
+
+# Installation des dépendances système (nécessaires pour ChromaDB et psycopg2)
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# rend le script de démarrage exécutable
-RUN chmod +x start.sh
+# Création du dossier pour ChromaDB si nécessaire
+RUN mkdir -p /app/src/rag/chroma_db && chmod 777 /app/src/rag/chroma_db
+RUN python -m src.rag.ingestion.processor
 
-# Pour que Python trouve le module 'src' correctement
-ENV PYTHONPATH=/app
-
+# Port imposé par Hugging Face
 EXPOSE 7860
 
-CMD ["./start.sh"]
+# Commande de démarrage via ton start.sh
+CMD ["/bin/bash", "start.sh"]

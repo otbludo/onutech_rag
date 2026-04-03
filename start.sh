@@ -1,9 +1,6 @@
 #!/bin/bash
+# Lancement des migrations avec Alembic
+alembic upgrade head
 
-echo "Exécution des migrations..."
-# lance alembic en pointant vers le bon fichier de config
-alembic -c ./alembic.ini upgrade head
-
-echo "Démarrage du serveur ONUtech..."
-# lance uvicorn en pointant vers src.main:app
+# Lancement de FastAPI
 uvicorn src.main:app --host 0.0.0.0 --port 7860
