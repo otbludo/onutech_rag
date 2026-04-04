@@ -18,16 +18,14 @@ export function WavyMarquee({
   const textPathRef = useRef<SVGTextPathElement>(null);
 
   const displayContent = Array.isArray(text) ? text.join("  •  ") : text;
-  // On garde un repeat élevé pour éviter les trous avec le gros texte mobile
+  // Repeat élevé pour mobile
   const repeatedText = `${displayContent}  •  `.repeat(30);
 
   useEffect(() => {
     let offset = 0;
     const animate = () => {
-      // Retour à ta logique initiale : addition de la vitesse
+      // Vitesse et logique d'origine rétablies
       offset += speed;
-
-      // Reset de l'offset quand il dépasse 100 ou tombe trop bas
       if (offset >= 100) offset = 0;
       if (offset <= -100) offset = 0;
 
@@ -44,14 +42,19 @@ export function WavyMarquee({
     <div className={`absolute inset-0 ${className}`}>
       <style>
         {`
-          /* TAILLE MOBILE (Boostée) */
-          #text-${id} {
-            font-size: 28px; 
+          /* TAILLE ET CENTRAGE MOBILE (iOS/iPhone) */
+          #textPath-${id} {
+            font-size: 26px; /* Taille boostée pour mobile */
+            
+            /* C'est ICI que ça se joue pour l'iPhone */
+            /*dy: 8px; /* Ajuste cette valeur (8px, 9px, 10px...) jusqu'à ce que ce soit parfait sur ton iPhone */
           }
-          /* TAILLE ORDINATEUR (Ta taille initiale) */
+
+          /* TAILLE ET CENTRAGE ORDINATEUR (Tes valeurs d'origine) */
           @media (min-width: 768px) {
-            #text-${id} {
+            #textPath-${id} {
               font-size: 9px;
+              dy: 3px; /* Ton décalage vertical d'origine (dy="5" était un peu fort pour 9px) */
             }
           }
         `}
@@ -66,12 +69,12 @@ export function WavyMarquee({
           <path id={id} d={pathDefinition} />
         </defs>
 
-        {/* La bordure noire s'adapte aussi : épaisse sur mobile, fine sur PC */}
+        {/* Bande noire épaisse sur mobile, fine sur PC */}
         <use
           href={`#${id}`}
           stroke="black"
-          strokeWidth="45"
-          className="md:stroke-[20px]"
+          strokeWidth="50" /* Épaisseur max pour mobile */
+          className="md:stroke-[20px]" /* Épaisseur origine pour PC */
           fill="none"
           strokeLinecap="round"
         />
@@ -80,10 +83,14 @@ export function WavyMarquee({
           id={`text-${id}`}
           className="font-black"
           style={{ fill: "white" }}
-          dominantBaseline="middle"
+          // On n'utilise plus dominantBaseline="middle" ici, trop instable sur Safari
           textAnchor="middle"
         >
-          <textPath ref={textPathRef} href={`#${id}`} dy="5">
+          <textPath
+            id={`textPath-${id}`} // ID ajouté ici pour le CSS
+            ref={textPathRef}
+            href={`#${id}`}
+          >
             {repeatedText}
           </textPath>
         </text>
