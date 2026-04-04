@@ -4,7 +4,7 @@ import { Button } from '../../ui/Button';
 
 export function InstallBanner() {
     const location = useLocation();
-    const isLoginPage = location.pathname.startsWith("/login");
+    const isLoginPage = location.pathname.startsWith("/home");
 
     const [deferredPrompt, setDeferredPrompt] = useState(null);
     const [isShown, setIsShown] = useState(false);
