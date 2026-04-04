@@ -38,7 +38,7 @@ export function WavyMarquee({
     <div className={`absolute inset-0 ${className}`}>
       <svg
         viewBox="0 0 800 800"
-        className="w-full h-full"
+        className="w-full h-full "
         preserveAspectRatio="xMidYMid slice"
       >
         <defs>

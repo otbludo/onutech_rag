@@ -19,7 +19,7 @@ function Chip({
     <Button
       onClick={onClick}
       variant="pill"
-      className="z-2 gap-2 px-4 py-3 shadow-sm text-[12px] md:text-sm whitespace-nowrap flex items-center"
+      className="z-2 gap-2 px-4 py-3 w-fit shadow-sm text-[12px] md:text-sm whitespace-nowrap flex items-center"
     >
       {icon}
       <span>{text}</span>
@@ -58,7 +58,7 @@ export function SuggestionChips({ setIsVisible, onSelectSuggestion }: Props) {
 
   return (
     <div className="flex w-full justify-center items-center">
-      <div className="flex w-full md:w-3/4 flex-wrap justify-center gap-3 px-2">
+      <div className="flex flex-col md:flex-row w-full md:w-3/4 flex-wrap justify-center gap-3 px-2">
         {chips.map((chip, index) => (
           <Chip
             key={index}

@@ -8,7 +8,8 @@ type ButtonVariant =
   | "ghost"
   | "danger"
   | "pill"
-  | "ghostDanger";
+  | "ghostDanger"
+  | "black";
 type ButtonSize = "sm" | "md" | "lg" | "icon" | "none";
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -27,6 +28,7 @@ const variantClasses: Record<ButtonVariant, string> = {
     "bg-[#E8524D] text-white hover:bg-[#d94742] border border-transparent",
   pill: "bg-white text-gray-700 hover:bg-gray-50 border border-gray-100 rounded-full",
   ghostDanger: "bg-transparent text-red-600 hover:bg-red-50 justify-start",
+  black: "bg-[#000000] text-white",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {

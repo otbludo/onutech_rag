@@ -150,7 +150,7 @@ const HomeScreen = () => {
           </div>
         )}
         {!showResponse && (
-          <div className="h-full flex flex-col items-center justify-center gap-10 z-2 mt-25">
+          <div className="relative h-full flex flex-col items-center justify-center gap-10 z-10 mt-25">
             <div className="flex flex-col gap-2 px-2 md:px-8">
               <h2 className="text-2xl text-gray-600 flex items-center gap-3">
                 Bonjour{" "}
