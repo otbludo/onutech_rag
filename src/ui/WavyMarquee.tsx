@@ -18,16 +18,19 @@ export function WavyMarquee({
   const textPathRef = useRef<SVGTextPathElement>(null);
 
   const displayContent = Array.isArray(text) ? text.join("  •  ") : text;
-  // On augmente un peu le repeat pour s'assurer qu'il n'y ait pas de trou quand le texte est gros
+  // On garde un repeat élevé pour éviter les trous avec le gros texte mobile
   const repeatedText = `${displayContent}  •  `.repeat(30);
 
   useEffect(() => {
     let offset = 0;
     const animate = () => {
-      // Pour un mouvement fluide vers la gauche
-      offset -= (speed * 0.1); 
+      // Retour à ta logique initiale : addition de la vitesse
+      offset += speed;
+
+      // Reset de l'offset quand il dépasse 100 ou tombe trop bas
+      if (offset >= 100) offset = 0;
       if (offset <= -100) offset = 0;
-      
+
       if (textPathRef.current) {
         textPathRef.current.setAttribute("startOffset", `${offset}%`);
       }
@@ -41,11 +44,11 @@ export function WavyMarquee({
     <div className={`absolute inset-0 ${className}`}>
       <style>
         {`
-          /* Taille par défaut pour MOBILE */
+          /* TAILLE MOBILE (Boostée) */
           #text-${id} {
-            font-size: 24px; 
+            font-size: 28px; 
           }
-          /* Taille pour les écrans plus grands (Tablettes/PC) */
+          /* TAILLE ORDINATEUR (Ta taille initiale) */
           @media (min-width: 768px) {
             #text-${id} {
               font-size: 9px;
@@ -53,7 +56,7 @@ export function WavyMarquee({
           }
         `}
       </style>
-      
+
       <svg
         viewBox="0 0 800 800"
         className="w-full h-full"
@@ -62,12 +65,13 @@ export function WavyMarquee({
         <defs>
           <path id={id} d={pathDefinition} />
         </defs>
-        
-        {/* On augmente le strokeWidth pour que la bande noire suive la taille du texte mobile */}
+
+        {/* La bordure noire s'adapte aussi : épaisse sur mobile, fine sur PC */}
         <use
           href={`#${id}`}
           stroke="black"
-          className="stroke-[40px] md:stroke-[20px]"
+          strokeWidth="45"
+          className="md:stroke-[20px]"
           fill="none"
           strokeLinecap="round"
         />
@@ -77,12 +81,9 @@ export function WavyMarquee({
           className="font-black"
           style={{ fill: "white" }}
           dominantBaseline="middle"
+          textAnchor="middle"
         >
-          <textPath 
-            ref={textPathRef} 
-            href={`#${id}`} 
-            startOffset="0%"
-          >
+          <textPath ref={textPathRef} href={`#${id}`} dy="5">
             {repeatedText}
           </textPath>
         </text>

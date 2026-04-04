@@ -27,14 +27,14 @@ export function Banner() {
         id="mainLoop"
         text={automationServices}
         pathDefinition={threadsPath}
-        speed={0.01}
-        className="opacity-90 "
+        speed={0.02}
+        className="opacity-90"
       />
       <WavyMarquee
         id="sideLoop"
         text={dataServices}
         pathDefinition={loopPath}
-        speed={0.02}
+        speed={0.03}
         className="opacity-100"
       />
     </div>
