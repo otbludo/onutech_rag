@@ -42,7 +42,6 @@ export function FormRealisation({
   mode = "create",
   initialData = null,
 }: FormRealisationProps) {
-  const API_URL = import.meta.env.VITE_API_URL;
   const {
     mutate: mutateCreate,
     isPending: isPendingCreate,
@@ -91,8 +90,8 @@ export function FormRealisation({
 
   const defaultPreviewImage = useMemo(() => {
     if (mode !== "update" || !initialData?.photo_url) return null;
-    return `${API_URL}${initialData.photo_url}`;
-  }, [API_URL, initialData?.photo_url, mode]);
+    return `${initialData.photo_url}`;
+  }, [initialData?.photo_url, mode]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
