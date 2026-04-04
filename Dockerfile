@@ -15,7 +15,6 @@ COPY . .
 
 # Création du dossier pour ChromaDB si nécessaire
 RUN mkdir -p /app/src/rag/chroma_db && chmod 777 /app/src/rag/chroma_db
-RUN python -m src.rag.ingestion.processor
 
 # Port imposé par Hugging Face
 EXPOSE 7860
