@@ -48,14 +48,17 @@ const HomeScreen = () => {
       setMessages((prev) => {
         const next = updater(prev);
         try {
-          sessionStorage.setItem(CHAT_HISTORY_STORAGE_KEY, JSON.stringify(next));
+          sessionStorage.setItem(
+            CHAT_HISTORY_STORAGE_KEY,
+            JSON.stringify(next),
+          );
         } catch (storageError) {
           console.error("Impossible de persister l'historique", storageError);
         }
         return next;
       });
     },
-    []
+    [],
   );
 
   const handleSend = (overrideQuestion?: string) => {
@@ -78,7 +81,7 @@ const HomeScreen = () => {
             ]);
           }
         },
-      }
+      },
     );
   };
 
@@ -172,7 +175,7 @@ const HomeScreen = () => {
           </div>
         )}
       </div>
-      <div className="fixed z-3 bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-slate-100 via-slate-100/90 to-transparent">
+      <div className="fixed z-10 bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-slate-100 via-slate-100/90 to-transparent">
         <div className="max-w-5xl mx-auto">
           <PromptInput
             value={prompt}
