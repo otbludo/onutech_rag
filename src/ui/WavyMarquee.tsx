@@ -18,16 +18,16 @@ export function WavyMarquee({
   const textPathRef = useRef<SVGTextPathElement>(null);
 
   const displayContent = Array.isArray(text) ? text.join("  •  ") : text;
-  // On réduit un peu le repeat pour la performance si nécessaire
-  const repeatedText = `${displayContent}  •  `.repeat(15);
+  // On augmente un peu le repeat pour s'assurer qu'il n'y ait pas de trou quand le texte est gros
+  const repeatedText = `${displayContent}  •  `.repeat(30);
 
   useEffect(() => {
     let offset = 0;
     const animate = () => {
-      // On décrémente pour un mouvement naturel de droite à gauche
-      offset -= speed / 10;
-      if (offset <= -50) offset = 0;
-
+      // Pour un mouvement fluide vers la gauche
+      offset -= (speed * 0.1); 
+      if (offset <= -100) offset = 0;
+      
       if (textPathRef.current) {
         textPathRef.current.setAttribute("startOffset", `${offset}%`);
       }
@@ -39,6 +39,21 @@ export function WavyMarquee({
 
   return (
     <div className={`absolute inset-0 ${className}`}>
+      <style>
+        {`
+          /* Taille par défaut pour MOBILE */
+          #text-${id} {
+            font-size: 24px; 
+          }
+          /* Taille pour les écrans plus grands (Tablettes/PC) */
+          @media (min-width: 768px) {
+            #text-${id} {
+              font-size: 9px;
+            }
+          }
+        `}
+      </style>
+      
       <svg
         viewBox="0 0 800 800"
         className="w-full h-full"
@@ -47,27 +62,27 @@ export function WavyMarquee({
         <defs>
           <path id={id} d={pathDefinition} />
         </defs>
-
-        {/* Ligne de fond (optionnelle, ajustée selon le texte) */}
+        
+        {/* On augmente le strokeWidth pour que la bande noire suive la taille du texte mobile */}
         <use
           href={`#${id}`}
           stroke="black"
-          strokeWidth="30"
+          className="stroke-[40px] md:stroke-[20px]"
           fill="none"
           strokeLinecap="round"
         />
 
         <text
-          className="font-black uppercase tracking-widest"
-          style={{
-            fill: "white",
-            // On utilise une taille adaptative :
-            // 24px sur mobile (par défaut) et 12px sur desktop (md: 768px)
-            fontSize: window.innerWidth < 768 ? "24px" : "10px",
-          }}
+          id={`text-${id}`}
+          className="font-black"
+          style={{ fill: "white" }}
           dominantBaseline="middle"
         >
-          <textPath ref={textPathRef} href={`#${id}`} startOffset="0%">
+          <textPath 
+            ref={textPathRef} 
+            href={`#${id}`} 
+            startOffset="0%"
+          >
             {repeatedText}
           </textPath>
         </text>
