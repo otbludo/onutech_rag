@@ -90,7 +90,7 @@ export function FormRealisation({
 
   const defaultPreviewImage = useMemo(() => {
     if (mode !== "update" || !initialData?.photo_url) return null;
-    return `${initialData.photo_url}`;
+    return initialData.photo_url;
   }, [initialData?.photo_url, mode]);
 
   const handleChange = (
