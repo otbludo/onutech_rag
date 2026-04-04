@@ -25,7 +25,7 @@ export function WavyMarquee({
     let offset = 0;
     const animate = () => {
       // Vitesse et logique d'origine rétablies
-      offset += speed;
+      offset += speed; 
       if (offset >= 100) offset = 0;
       if (offset <= -100) offset = 0;
 
@@ -59,7 +59,7 @@ export function WavyMarquee({
           }
         `}
       </style>
-
+      
       <svg
         viewBox="0 0 800 800"
         className="w-full h-full"
@@ -68,7 +68,7 @@ export function WavyMarquee({
         <defs>
           <path id={id} d={pathDefinition} />
         </defs>
-
+        
         {/* Bande noire épaisse sur mobile, fine sur PC */}
         <use
           href={`#${id}`}
@@ -86,10 +86,10 @@ export function WavyMarquee({
           // On n'utilise plus dominantBaseline="middle" ici, trop instable sur Safari
           textAnchor="middle"
         >
-          <textPath
+          <textPath 
             id={`textPath-${id}`} // ID ajouté ici pour le CSS
-            ref={textPathRef}
-            href={`#${id}`}
+            ref={textPathRef} 
+            href={`#${id}`} 
           >
             {repeatedText}
           </textPath>
