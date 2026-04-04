@@ -194,9 +194,7 @@ export function Galerie({ isVisible, user, setIsVisible }: Props) {
                 >
                   <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-4 bg-gray-100 shadow-sm border border-gray-100">
                     <img
-                      src={`${API_URL}${item.photo_url}?v=${encodeURIComponent(
-                        item.updated_at ?? item.created_at ?? item.id,
-                      )}`}
+                      src={item.photo_url}
                       alt={item.title}
                       className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                     />
