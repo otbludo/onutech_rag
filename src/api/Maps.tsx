@@ -59,7 +59,7 @@ export function OpenFreeMapLeaflet() {
       style={{
         width: "100%",
         height: "100%",
-        borderRadius: "24px",
+        borderRadius: "0px",
         overflow: "hidden",
         position: "relative",
       }}
@@ -96,7 +96,7 @@ export function OpenFreeMapLeaflet() {
         {routeCoords.length > 0 && (
           <Polyline
             positions={routeCoords}
-            pathOptions={{ color: "#ff4d4d", weight: 6, opacity: 0.8 }}
+            pathOptions={{ color: "#508157", weight: 6, opacity: 0.8 }}
           />
         )}
       </MapContainer>

@@ -1,13 +1,18 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import { toast } from "react-toastify";
-import { Link, MoreHorizontal, Folder, X } from "lucide-react";
+import {
+  MoreHorizontal,
+  Folder,
+  X,
+  ArrowUpRight,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "../../ui/Button";
 import { ActionMenu } from "../../components/ActionMenu";
 import { Confirmation } from "./Confirmation";
 import { FormRealisation } from "./FormRealisation";
 import { NotFound } from "../Notfound";
-import { IntroAnimation } from "../animations/IntroAnimation"; 
+import { IntroAnimation } from "../animations/IntroAnimation";
 import {
   useGetRealisations,
   useDeleteRealisation,
@@ -16,15 +21,9 @@ import {
 const API_URL = import.meta.env.VITE_API_URL;
 const EMAIL = import.meta.env.VITE_EMAIL1;
 
-interface GoogleUser {
-  name: string;
-  email: string;
-  picture: string;
-}
-
 interface Props {
   isVisible: number;
-  user: GoogleUser | null;
+  user: any | null;
   setIsVisible: React.Dispatch<React.SetStateAction<number>>;
 }
 
@@ -34,6 +33,7 @@ interface Realisation {
   description: string;
   categorie: string;
   photo_url: string;
+  link: string;
   stack: any;
   created_at: string;
   updated_at: string | null;
@@ -47,7 +47,6 @@ export function Galerie({ isVisible, user, setIsVisible }: Props) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedRealisation, setSelectedRealisation] =
     useState<Realisation | null>(null);
-
   const [animationState, setAnimationState] = useState(0);
 
   const { data: dataRealisation, isLoading: isLoadingRealisation } =
@@ -115,11 +114,11 @@ export function Galerie({ isVisible, user, setIsVisible }: Props) {
   return (
     <div
       onClick={() => setIsVisible(0)}
-      className="fixed inset-0 flex items-center justify-center md:p-4 bg-black/60 backdrop-blur-sm z-[100]"
+      className="fixed inset-0 flex items-center justify-center bg-gray-100/80 backdrop-blur-md z-[100]"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-[1400px] h-[100vh] md:h-auto md:max-h-[90vh] bg-white text-gray-900 flex flex-col md:rounded-2xl overflow-hidden shadow-2xl"
+        className={`relative w-full h-full md:w-[98vw] md:h-[95vh] bg-[#F9F9F9] text-gray-900 flex flex-col md:rounded-lg border border-gray-200 shadow-2xl ${animationState === 1 ? "overflow-hidden" : "overflow-y-auto"}`}
       >
         <AnimatePresence>
           {animationState === 1 && <IntroAnimation variant="realisations" />}
@@ -128,93 +127,72 @@ export function Galerie({ isVisible, user, setIsVisible }: Props) {
         <div
           className={`flex flex-col flex-1 transition-opacity duration-700 ${animationState === 1 ? "opacity-0" : "opacity-100"}`}
         >
-          <header className="px-4 sm:px-6 lg:px-8 pt-4 md:pt-6">
-            <div className="flex justify-between">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="rounded-full p-2 bg-blue-100 text-blue-600">
-                  <Folder size={18} />
-                </div>
-                <span className="text-xl font-medium pacifico-regular">
-                  Projets réalisés
-                </span>
+          <header className="px-6 py-8 border-b border-gray-200 bg-white">
+            <div className="flex justify-between items-start mb-8">
+              <div>
+                <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-2 text-gray-900">
+                  REALI <span className="text-gray-300">SATIONS</span>
+                </h2>
+                <div className="h-1 w-20 bg-green-600 mb-4" />{" "}
+                <p className="text-gray-400 text-xs font-mono tracking-widest uppercase">
+                  Digital Craftsmanship & Strategy
+                </p>
               </div>
               <Button
                 variant="secondary"
-                size="icon"
+                size="none"
                 onClick={() => setIsVisible(0)}
-                className="rounded-full"
+                className="rounded-full p-2 px-2"
               >
-                <X size={18} />
+                <X size={32} strokeWidth={1.2} />
               </Button>
             </div>
-
-            <div className="w-full border-b border-gray-200">
-              <div className="flex overflow-x-auto scrollbar-hide py-4 gap-4 items-center">
-                {categoriesList.map((catName, index) => (
-                  <Button
-                    key={index}
-                    onClick={() => setActiveTab(catName)}
-                    variant={catName === activeTab ? "primary" : "secondary"}
-                    size="sm"
-                    className={`whitespace-nowrap px-4 py-2 rounded-full transition-all duration-300 ${catName === activeTab ? "text-white shadow-md" : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"}`}
-                  >
-                    {catName}
-                  </Button>
-                ))}
-                {user?.email === EMAIL && (
-                  <Button
-                    variant={"primary"}
-                    size="sm"
-                    className="bg-black text-white px-4 py-2 rounded-full transition-all duration-300 hover:opacity-80"
-                    onClick={() => setIsFormOpen(true)}
-                  >
-                    Ajouter
-                  </Button>
-                )}
-              </div>
+            <div className="flex flex-wrap gap-2 items-center">
+              {categoriesList.map((catName, index) => (
+                <Button
+                  key={index}
+                  onClick={() => setActiveTab(catName)}
+                  variant={catName === activeTab ? "primary" : "secondary"}
+                  size="sm"
+                  className={`whitespace-nowrap px-4 py-2 rounded-full transition-all duration-300 ${catName === activeTab ? "text-white shadow-md" : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"}`}
+                >
+                  {catName}
+                </Button>
+              ))}
+              {user?.email === EMAIL && (
+                <Button
+                  variant={"primary"}
+                  size="sm"
+                  className="bg-black text-white px-4 py-2 rounded-full transition-all duration-300 hover:opacity-80"
+                  onClick={() => setIsFormOpen(true)}
+                >
+                  Ajouter
+                </Button>
+              )}
             </div>
           </header>
-
-          <main className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-8">
+          <main className="flex-1 overflow-y-auto bg-[#F2F2F2]">
             {isLoadingRealisation ? (
-              <div className="flex justify-center py-20 text-gray-400">
-                Chargement...
+              <div className="flex justify-center py-20 font-mono text-gray-400 uppercase tracking-widest">
+                Loading Archives...
               </div>
             ) : filteredData.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[1px] bg-gray-200">
+                {" "}
                 {filteredData.map((item) => (
                   <div
                     key={item.id}
-                    className="flex flex-col group animate-in fade-in duration-500"
+                    className="group relative flex flex-col bg-white overflow-hidden transition-colors hover:bg-[#FAFAFA]"
                   >
-                    <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden mb-4 bg-gray-100 shadow-sm border border-gray-100">
+                    <div className="relative aspect-[16/11] overflow-hidden border-b border-gray-100">
                       <img
                         src={item.photo_url}
                         alt={item.title}
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                        className="w-full h-full object-cover  group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-700"
                       />
-                      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center p-4 text-center">
-                        <p className="text-white text-xs font-semibold uppercase tracking-wider mb-3 opacity-80">
-                          Technologies utilisées
-                        </p>
-                        <div className="flex flex-wrap justify-center gap-2">
-                          {item.stack.map((tech: string, idx: number) => (
-                            <span
-                              key={idx}
-                              className="text-[11px] px-3 py-1 bg-white/20 border border-white/30 text-white rounded-full backdrop-blur-md"
-                            >
-                              {tech.trim()}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="absolute bottom-3 left-3 group-hover:opacity-0 transition-opacity">
-                        <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-white text-black rounded-lg shadow-sm">
-                          {item.title}
-                        </span>
-                      </div>
+
                       {user?.email === EMAIL && (
-                        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                        <div className="absolute top-4 right-4 z-20">
                           <Button
                             variant="ghost"
                             size="icon"
@@ -225,7 +203,7 @@ export function Galerie({ isVisible, user, setIsVisible }: Props) {
                                 openMenuId === item.id ? null : item.id,
                               );
                             }}
-                            className="bg-white/90 hover:bg-white text-black rounded-full h-8 w-8 shadow-lg"
+                            className="bg-white/90 backdrop-blur-sm text-gray-900 border border-gray-200 rounded-full h-9 w-9 shadow-sm"
                           >
                             <MoreHorizontal size={18} />
                           </Button>
@@ -239,13 +217,43 @@ export function Galerie({ isVisible, user, setIsVisible }: Props) {
                         </div>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 px-1">
-                      <div className="flex-shrink-0 flex items-center justify-center w-4 h-4">
-                        <Link size={14} />
+                    <div className="p-8 flex flex-col flex-1">
+                      <div className="flex items-center gap-4 mb-4">
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-green-600">
+                          {item.categorie}
+                        </span>
+                        <div className="h-[1px] flex-1 bg-gray-100" />
+                        <span className="text-[10px] text-gray-400 font-mono italic">
+                          {new Date(item.created_at).getFullYear()}
+                        </span>
                       </div>
-                      <span className="text-sm font-semibold text-gray-900 truncate">
+                      <a
+                        href={item.link || item.photo_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-2xl font-bold uppercase tracking-tighter text-gray-900 mb-4 group-hover:translate-x-1 transition-transform duration-300 flex items-center gap-2"
+                      >
                         {item.title}
-                      </span>
+                        <ArrowUpRight
+                          size={18}
+                          className="text-gray-300 group-hover:text-green-600 transition-colors"
+                        />
+                      </a>
+
+                      <p className="text-gray-500 text-sm line-clamp-3 mb-8 leading-relaxed font-serif">
+                        {item.description ||
+                          "Project documentation under review for public release."}
+                      </p>
+                      <div className="mt-auto pt-6 border-t border-gray-50 flex flex-wrap gap-2">
+                        {item.stack.map((tech: string, idx: number) => (
+                          <span
+                            key={idx}
+                            className="text-[9px] font-bold uppercase text-gray-400 tracking-tighter"
+                          >
+                            #{tech.trim()}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -253,20 +261,19 @@ export function Galerie({ isVisible, user, setIsVisible }: Props) {
             ) : (
               <NotFound
                 Icon={Folder}
-                title="Aucun projet"
-                message={`Aucun projet trouvé dans la catégorie "${activeTab}"`}
-                className="h-[300px] flex-1"
+                title="Archive Empty"
+                message={`No entries for ${activeTab}`}
+                className="h-[400px] flex-1 text-gray-300"
               />
             )}
           </main>
         </div>
-
         {isConfirmOpen !== null && (
           <Confirmation
             closeConfirm={() => setIsConfirmOpen(null)}
             isPendingDelete={isPendingDelete}
-            title={`Supprimer la réalisation`}
-            description="Cette action est irréversible. Voulez-vous continuer ?"
+            title="Remove Entry"
+            description="Are you sure? This will remove the project from the public index."
             onConfirm={handleConfirmDelete}
           />
         )}
