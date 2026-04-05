@@ -14,6 +14,7 @@
     "@tanstack/react-query": "^5.90.21",
     "@tanstack/react-query-devtools": "^5.91.3",
     "@types/google.accounts": "^0.0.18",
+    "framer-motion": "^12.38.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.577.0",
     "maplibre-gl": "^5.20.0",
@@ -27,9 +28,9 @@
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@tailwindcss/postcss": "^4.2.1",
+    "@types/leaflet": "^1.9.15",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "@types/leaflet": "^1.9.15",
     "@vitejs/plugin-react": "^5.1.1",
     "autoprefixer": "^10.4.27",
     "eslint": "^9.39.1",

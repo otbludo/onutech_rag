@@ -3,11 +3,11 @@ import { ToastContainer } from "react-toastify";
 import { Header } from "../components/Header";
 import { PromptInput } from "../components/PromptInput";
 import { SuggestionChips } from "../components/SuggestionChips";
-import { Response } from "../components/response";
+import { Response } from "../components/Response";
 import { useAskQuestion } from "../hooks/chatbot";
 import { FreeMap3D } from "../components/modals/Maps";
 import { Galerie } from "../components/modals/Galerie";
-import { Banner } from "../components/banner";
+import { Banner } from "../components/Banner";
 
 type AskQuestionResponse = {
   answer: {
