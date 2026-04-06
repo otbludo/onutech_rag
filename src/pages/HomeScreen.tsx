@@ -168,7 +168,6 @@ const HomeScreen = () => {
             <SuggestionChips
               setIsVisible={setIsVisible}
               onSelectSuggestion={(text) => {
-                setPrompt(text);
                 handleSend(text);
               }}
             />
