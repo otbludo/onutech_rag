@@ -1,11 +1,6 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import { toast } from "react-toastify";
-import {
-  MoreHorizontal,
-  Folder,
-  X,
-  ArrowUpRight,
-} from "lucide-react";
+import { MoreHorizontal, Folder, X, ArrowUpRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "../../ui/Button";
 import { ActionMenu } from "../../components/ActionMenu";
@@ -131,7 +126,8 @@ export function Galerie({ isVisible, user, setIsVisible }: Props) {
             <div className="flex justify-between items-start mb-8">
               <div>
                 <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-2 text-gray-900">
-                  REALI <span className="text-gray-300">SATIONS</span>
+                  REALI <br className="md:hidden" />
+                  <span className="text-gray-300">SATIONS</span>
                 </h2>
                 <div className="h-1 w-20 bg-green-600 mb-4" />{" "}
                 <p className="text-gray-400 text-xs font-mono tracking-widest uppercase">

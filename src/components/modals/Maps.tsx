@@ -49,7 +49,8 @@ export function FreeMap3D({ isVisible, setIsVisible }: Props) {
             <div className="flex justify-between items-start">
               <div>
                 <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-2 text-gray-900">
-                  LOCA <span className="text-gray-300">LISATION</span>
+                  LOCA <br className="md:hidden" />
+                  <span className="text-gray-300">LISATION</span>
                 </h2>
                 <div className="h-1 w-20 bg-green-600 mb-4" />
                 <p className="text-gray-400 text-xs font-mono tracking-widest uppercase flex items-center gap-2">
@@ -72,7 +73,7 @@ export function FreeMap3D({ isVisible, setIsVisible }: Props) {
               </span>
               <div className="h-[1px] flex-1 bg-gray-100" />
               <span className="text-[10px] text-gray-400 font-mono italic">
-                EST. {new Date().getFullYear()}
+                NKOUMOU. {new Date().getFullYear()}
               </span>
             </div>
           </header>

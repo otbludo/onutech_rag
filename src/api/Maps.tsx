@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Polyline, ZoomControl } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Polyline,
+  ZoomControl,
+} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -35,13 +41,13 @@ export function OpenFreeMapLeaflet() {
 
         try {
           const res = await fetch(
-            `https://router.project-osrm.org/route/v1/driving/${start[0]},${start[1]};${end[0]},${end[1]}?overview=full&geometries=geojson`
+            `https://router.project-osrm.org/route/v1/driving/${start[0]},${start[1]};${end[0]},${end[1]}?overview=full&geometries=geojson`,
           );
           const data = await res.json();
           if (data.routes && data.routes[0]) {
             // OSRM [lng, lat] -> Leaflet [lat, lng]
             const flipCoords = data.routes[0].geometry.coordinates.map(
-              (c: [number, number]) => [c[1], c[0]]
+              (c: [number, number]) => [c[1], c[0]],
             );
             setRouteCoords(flipCoords);
           }
@@ -50,7 +56,7 @@ export function OpenFreeMapLeaflet() {
         }
       },
       (err) => console.error(err),
-      { enableHighAccuracy: true }
+      { enableHighAccuracy: true },
     );
   }, []);
 
@@ -73,9 +79,9 @@ export function OpenFreeMapLeaflet() {
         {/* Tuiles Satellite Esri */}
         <TileLayer
           url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-          attribution='&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EBP, and the GIS User Community'
+          attribution="&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EBP, and the GIS User Community"
         />
-        
+
         {/* Optionnel : Ajout des noms de rues par-dessus le satellite pour plus de clarté */}
         <TileLayer
           url="https://stamen-tiles-{s}.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}{r}.png"
@@ -88,15 +94,13 @@ export function OpenFreeMapLeaflet() {
         <Marker position={[DESTINATION.lat, DESTINATION.lng]} />
 
         {/* Utilisateur */}
-        {userPos && (
-          <Marker position={[userPos.lat, userPos.lng]} />
-        )}
+        {userPos && <Marker position={[userPos.lat, userPos.lng]} />}
 
         {/* Itinéraire (en rouge pour bien trancher sur le satellite) */}
         {routeCoords.length > 0 && (
           <Polyline
             positions={routeCoords}
-            pathOptions={{ color: "#508157", weight: 6, opacity: 0.8 }}
+            pathOptions={{ color: "#4dff65", weight: 6, opacity: 0.8 }}
           />
         )}
       </MapContainer>
