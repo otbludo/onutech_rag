@@ -197,7 +197,7 @@ const DICTIONARIES: Record<string, Dictionary> = {
         size: "text-2xl",
         color: "text-gray-900",
         top: "64%",
-        left: "85%",
+        left: "80%",
       },
       {
         text: "QUEL PAYS ?",
