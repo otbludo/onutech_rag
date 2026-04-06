@@ -14,8 +14,8 @@ export function InstallBanner() {
   const [showIosInstruction, setShowIosInstruction] = useState(false);
 
   const isIOS =
-    /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
+  /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+  
   useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
       e.preventDefault();
