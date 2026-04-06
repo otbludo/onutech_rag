@@ -100,7 +100,7 @@ export function OpenFreeMapLeaflet() {
         {routeCoords.length > 0 && (
           <Polyline
             positions={routeCoords}
-            pathOptions={{ color: "#4dff65", weight: 6, opacity: 0.8 }}
+            pathOptions={{ color: "#4878e0", weight: 6, opacity: 0.8 }}
           />
         )}
       </MapContainer>

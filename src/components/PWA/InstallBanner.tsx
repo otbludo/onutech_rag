@@ -3,8 +3,6 @@ import { useLocation } from "react-router-dom";
 import { Button } from "../../ui/Button";
 import { X } from "lucide-react";
 
-// ... (imports restants identiques)
-
 export function InstallBanner() {
   const location = useLocation();
   const isLoginPage = location.pathname.startsWith("/home");
@@ -12,10 +10,11 @@ export function InstallBanner() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isShown, setIsShown] = useState(false);
   const [showIosInstruction, setShowIosInstruction] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
 
   const isIOS =
-  /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
-  
+    /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+
   useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
       e.preventDefault();
@@ -35,6 +34,32 @@ export function InstallBanner() {
       );
   }, [isIOS]);
 
+  useEffect(() => {
+    const detectStandalone = () => {
+      const mediaStandalone = window.matchMedia?.(
+        "(display-mode: standalone)",
+      ).matches;
+      const navigatorStandalone = (window.navigator as any).standalone;
+      const standalone = Boolean(mediaStandalone || navigatorStandalone);
+      setIsStandalone(standalone);
+      if (standalone) {
+        setIsShown(false);
+        setShowIosInstruction(false);
+      }
+    };
+
+    detectStandalone();
+
+    const mediaQuery = window.matchMedia?.("(display-mode: standalone)");
+    mediaQuery?.addEventListener("change", detectStandalone);
+    window.addEventListener("appinstalled", detectStandalone);
+
+    return () => {
+      mediaQuery?.removeEventListener("change", detectStandalone);
+      window.removeEventListener("appinstalled", detectStandalone);
+    };
+  }, []);
+
   // Action du bouton "Installer"
   const handleInstallAction = async () => {
     if (isIOS) {
@@ -52,12 +77,10 @@ export function InstallBanner() {
     setShowIosInstruction(false);
   };
 
-  // Si on cache la bannière ou qu'on n'est pas sur la bonne page, on ne rend RIEN
-  if (!isShown || !isLoginPage) return null;
+  if (!isShown || !isLoginPage || isStandalone) return null;
 
   return (
     <div className="fixed md:w-[450px] top-4 left-4 md:left-auto right-4 z-[9999] flex flex-col gap-2">
-      {/* La Bannière principale */}
       <div className="relative bg-white p-4 rounded-2xl shadow-2xl border border-purple-100 flex items-center justify-between animate-bounce">
         <div>
           <p className="font-bold text-gray-900">ONUtech</p>
@@ -76,8 +99,6 @@ export function InstallBanner() {
         >
           {isIOS ? (showIosInstruction ? "Fermer" : "Installer") : "Installer"}
         </Button>
-
-        {/* BOUTON X : Il appelle maintenant closeEverything */}
         <Button
           variant="black"
           size="none"
@@ -88,8 +109,6 @@ export function InstallBanner() {
           <X size={18} />
         </Button>
       </div>
-
-      {/* Bulle d'instruction spécifique à l'iPhone */}
       {isIOS && showIosInstruction && (
         <div className="bg-white text-gray-600 p-4 rounded-2xl shadow-xl animate-in fade-in slide-in-from-top-2 duration-300 border border-gray-100">
           <p className="text-sm font-medium">

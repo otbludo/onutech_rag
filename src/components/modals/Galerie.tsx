@@ -129,9 +129,9 @@ export function Galerie({ isVisible, user, setIsVisible }: Props) {
                   REALI <br className="md:hidden" />
                   <span className="text-gray-300">SATIONS</span>
                 </h2>
-                <div className="h-1 w-20 bg-green-600 mb-4" />{" "}
+                <div className="h-1 w-20 bg-green-600 mb-4" />
                 <p className="text-gray-400 text-xs font-mono tracking-widest uppercase">
-                  Digital Craftsmanship & Strategy
+                  Projets et réalisations
                 </p>
               </div>
               <Button

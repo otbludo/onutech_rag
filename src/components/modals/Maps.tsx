@@ -54,7 +54,7 @@ export function FreeMap3D({ isVisible, setIsVisible }: Props) {
                 </h2>
                 <div className="h-1 w-20 bg-green-600 mb-4" />
                 <p className="text-gray-400 text-xs font-mono tracking-widest uppercase flex items-center gap-2">
-                  Global Positioning & Presence
+                  Positionnement et présence
                 </p>
               </div>
 
